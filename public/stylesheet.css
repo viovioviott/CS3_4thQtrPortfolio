@@ -1,0 +1,15 @@
+@font-face {
+    font-family: "pinlock"; 
+    src: url(fonts/pinlock.otf), format('opentype');
+}
+
+@font-face {
+    font-family: "stockhome"; 
+    src: url(fonts/Stockhome.otf), format('opentype');
+}
+
+@font-face {
+    font-family: "simple"; 
+    src: url(fonts/SimpleHandmade.otf), format('opentype');
+}
+
