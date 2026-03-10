@@ -4,6 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="stylesheet" href="stylesheet.css">
+    <title>Movie Rating</title>
     <style>
         body {
             display: flex;
@@ -41,16 +42,24 @@
         }
 
         .star {
+            font-size: 28px;
+            color: lightgray;
             cursor: pointer;
-            font-size: 20px;
+            transition: color 0.2s;
         }
 
         .star:hover, 
-        .star:selected {
-            color: gold;
+        .star.selected {
+            color: rgb(255, 230, 0);
             }
 
-
+        button {
+            width: 100%;
+            padding: 10px;
+            background: rgb(151, 206, 238);
+            font-family: "pinlock";
+            border-color: rgb(115, 181, 219);
+        }
     </style>
 </head>
 
@@ -65,7 +74,7 @@
     <input type="number" id="year"> <br> <br>
 
     <label for="genre">Genre: </label>    
-    <select id="year"> 
+    <select id="genre"> 
         <option value="action">Action</option>
         <option value="adventure">Adventure</option>
         <option value="comedy">Comedy</option>
@@ -78,68 +87,105 @@
 
     <label>Rating: </label> <br>
     <div class="stars" id="rating"> 
-        <span class="star" data-value="1">&#9733;</span>
-        <span class="star" data-value="2">&#9733;</span>
-        <span class="star" data-value="3">&#9733;</span>
-        <span class="star" data-value="4">&#9733;</span>
-        <span class="star" data-value="5">&#9733;</span>
+        <span class="star" data-value="1">★</span>
+        <span class="star" data-value="2">★</span>
+        <span class="star" data-value="3">★</span>
+        <span class="star" data-value="4">★</span>
+        <span class="star" data-value="5">★</span>
     </div>
 
-        <script>
-            const stars = document.querySelectorA(".star");
-            stars.forEach((star, index1) => {
-                star.addEventListener("click", () => {
-                    console.log(index1);
-                })
-            }
-        )
-
-            stars.forEach((star, index2) => {
-                star.addEventListener("click", () => {
-                    console.log(index2);
-                })
-            }
-        )
-
-            stars.forEach((star, index3) => {
-                star.addEventListener("click", () => {
-                    console.log(index3);
-                })
-            }
-        )
-
-            stars.forEach((star, index4) => {
-                star.addEventListener("click", () => {
-                    console.log(index4);
-                })
-            }
-        )
-
-            stars.forEach((star, index5) => {
-                star.addEventListener("click", () => {
-                    console.log(index5);
-                })
-            }
-        )
-
-        </script>
-    
     <br> <br>
     <button onclick="addMovie()" >Add Movie</button>
 
     <h2>Movie List</h2>
-    <ul id="moiveList"></ul>
-    </div>
+    <ul id="movieList">
+
+
+    </ul>
 
     <script>
-        function addMovie() {
-        let counter = 0;
-        
-        
-        let movieList = [];
+        let selectedRating = 0;
 
+        // Handle star clicks
+        document.querySelectorAll(".star").forEach(star => {
+            star.addEventListener("click", function() {
+                selectedRating = parseInt(this.getAttribute("data-value"));
+                updateStars(selectedRating);
+            });
+        });
+
+        function updateStars(rating) {
+            document.querySelectorAll(".star").forEach(star => {
+                const value = parseInt(star.getAttribute("data-value"));
+                if (value <= rating) {
+                    star.classList.add("selected");
+                } else {
+                    star.classList.remove("selected");
+                }
+            });
         }
-    </script>
 
+        function displayMovies() {
+            const movieList = JSON.parse(localStorage.getItem("movies")) || [];
+            const movieListElement = document.getElementById("movieList");
+            movieListElement.innerHTML = "";
+
+            movieList.forEach(movie => {
+                let stars = "";
+                const rating = parseInt(movie.rating); // Ensure rating is a number
+
+                for (let i = 0; i < rating; i++) {
+                    stars += '<span style="color: gold">★</span>';
+                }
+                for (let i = rating; i < 5; i++) {
+                    stars += '<span style="color: gray">★</span>';
+                }
+
+                const listItem = document.createElement("li");
+                listItem.innerHTML = `${movie.title} (${movie.year}) - ${movie.genre}, Rating: ${stars}`;
+                movieListElement.appendChild(listItem);
+            });
+        }
+
+        function addMovie() {
+            const title = document.getElementById("title").value;
+            const year = document.getElementById("year").value;
+            const genre = document.getElementById("genre").value;
+
+            if (!title || !year || !genre || selectedRating === 0) {
+                alert("Please fill out all fields and select a rating.");
+                return;
+            }
+
+            let movieList = JSON.parse(localStorage.getItem("movies")) || [];
+
+            const newMovie = {
+                title,
+                year,
+                genre,
+                rating: selectedRating // Use the selected rating
+            };
+
+            movieList.push(newMovie);
+            localStorage.setItem("movies", JSON.stringify(movieList));
+
+            displayMovies();
+
+            // Clears form
+            document.getElementById("title").value = "";
+            document.getElementById("year").value = "";
+            document.getElementById("genre").value = "";
+            selectedRating = 0;
+            updateStars(selectedRating);
+
+            alert("Movie added successfully!");
+        }
+
+        // Display movies on page load
+        displayMovies();
+    </script>
+</body>
+</html>
     
+
 </body>
