@@ -13,3 +13,9 @@
     src: url(fonts/SimpleHandmade.otf), format('opentype');
 }
 
+@font-face {
+    font-family: "pie"; 
+    src: url(fonts/CHICKEN\ Pie.otf), format('opentype');
+}
+
+
