@@ -64,7 +64,7 @@
             color: rgb(255, 225, 53);
             }
 
-        button {
+        button.add {
             width: 200px;
             padding: 10px;
             background: rgb(151, 206, 238);
@@ -75,11 +75,11 @@
             transition: 0.1s;
         }
 
-        button:active {
+        button.add:active {
             transform: translateY(4px); /* moves the text when clicked (the bounce effect) */
         }
 
-        button:hover, button:focus {
+        button.add:hover, button.add:focus {
             font-size: 24px;
             padding: 14px /* increases font size when clicked (the bounce effect) */
 
@@ -94,7 +94,7 @@
             padding: 8px;
             list-style: none;
             justify-self: center;
-            width: 300px;
+            width: 400px;
             text-align: center;
             border-radius: 10px;
         }
@@ -104,10 +104,34 @@
             text-decoration: solid;
             font-size: 20px;
         }
+
+        a {
+            font-family: "simple";
+            text-decoration: solid;
+            font-size: 40px;
+            margin: 10px;
+            color: rgb(255, 245, 190);
+        }
+
+        .delete {
+            width: 60px;
+            font-size: 15px;
+            padding: 10px;
+            background: rgb(151, 206, 238);
+            font-family: "simple";
+            text-align: center;
+            align-items: center;
+            border-radius: 10px;
+            transition: 0.1s;
+
+            margin: 10px;
+        }
     </style>
 </head>
 
 <body>
+    <a href="index.html">⊹₊⟡⋆</a>
+
     <div class="box">
     <h2>Add a Movie</h2>
 
@@ -143,7 +167,7 @@
     </div>
 
     <br>
-    <button onclick="addMovie()" >Add Movie</button>
+    <button class="add" onclick="addMovie()" >Add Movie</button>
 
     <h2>Movie List</h2>
     <ul id="movieList">
@@ -174,9 +198,9 @@
         }
 
         function displayMovies() {
-            const movieList = JSON.parse(localStorage.getItem("movies")) || [];
-            const movieListElement = document.getElementById("movieList");
-            movieListElement.innerHTML = "";
+            const movieList = JSON.parse(localStorage.getItem("movies")) || []; 
+            const movieListElement = document.getElementById("movieList"); //gets movie list element
+            movieListElement.innerHTML = ""; // Clear existing list to avoid duplicates
 
             movieList.forEach(movie => {
                 let stars = "";
@@ -190,9 +214,28 @@
                 }
 
                 const listItem = document.createElement("li");
-                listItem.innerHTML = `${movie.title} (${movie.year}) - ${movie.genre}, Rating: ${stars}`;
-                movieListElement.appendChild(listItem);
+                listItem.innerHTML = `${movie.title} (${movie.year}) - ${movie.genre}, Rating: ${stars}`+ '<button onclick="deleteMovie(\'' + movie.title + '\')" class=delete>Delete</button>'; 
+                movieListElement.appendChild(listItem); // Add the new list item to the movie list element
             });
+        }
+
+        function deleteMovie() {
+            if (!confirm("Are you sure you want to delete this movie?")) {
+                return; // Exit if the user cancels the deletion
+            }
+            else {
+            const title = event.target.parentElement.textContent.split(" (")[0]; // Get the movie title from the list item
+            let movieList = JSON.parse(localStorage.getItem("movies")) || []; // Get the current movie list from localStorage
+
+            // Filter out the movie to be deleted
+            movieList = movieList.filter(movie => movie.title !== title);
+
+            // Update localStorage with the new movie list
+            localStorage.setItem("movies", JSON.stringify(movieList));
+
+            // Refresh the displayed movie list
+            displayMovies();
+            }
         }
 
         function addMovie() {
@@ -205,9 +248,22 @@
                 return;
             }
 
-            let movieList = JSON.parse(localStorage.getItem("movies")) || [];
 
-            const newMovie = {
+            let key = title;
+
+            let movieObj = JSON.parse(localStorage.getItem("movies")) || [];
+            
+            if (movieObj[key]) {
+                let aveRating = (parseInt(movieObj[key].rating) + parseInt(rating)) / 2;
+                aveRating = Math.round(aveRating);
+                movieObj[key].rating = aveRating;
+            }
+
+            else {
+
+            let movieList = JSON.parse(localStorage.getItem("movies")) || []; 
+
+            const newMovie = { // Adds new movie to the movie list
                 title,
                 year,
                 genre,
@@ -228,6 +284,7 @@
 
             alert("Movie added successfully!");
         }
+    }
 
         // Display movies on page load
         displayMovies();
