@@ -5,6 +5,8 @@
 
     <link rel="stylesheet" href="stylesheet.css">
     <title>Movie Rating</title>
+    <link rel="icon" type="image/ico" href="images/movie.ico">
+    
     <style>
         body {
             display: flex;
@@ -130,7 +132,7 @@
 </head>
 
 <body>
-    <a href="index.html">⊹₊⟡⋆</a>
+    <a href="index.html">⊹</a>
 
     <div class="box">
     <h2>Add a Movie</h2>
@@ -248,43 +250,43 @@
                 return;
             }
 
+            let movieList = JSON.parse(localStorage.getItem("movies")) || [];
 
-            let key = title;
+            // Check if a movie with the same title already exists
+            let existingMovie = movieList.find(movie => movie.title === title);
 
-            let movieObj = JSON.parse(localStorage.getItem("movies")) || [];
-            
-            if (movieObj[key]) {
-                let aveRating = (parseInt(movieObj[key].rating) + parseInt(rating)) / 2;
+            if (existingMovie) {
+                // Update the existing movie's rating by averaging with the new rating
+                let aveRating = (parseInt(existingMovie.rating) + selectedRating) / 2;
                 aveRating = Math.round(aveRating);
-                movieObj[key].rating = aveRating;
+                existingMovie.rating = aveRating;
+            
+            } else {
+            // Add a new movie if it doesn't exist
+                const newMovie = {
+                    title,
+                    year,
+                    genre,
+                    rating: selectedRating
+                };
+                    movieList.push(newMovie);
             }
 
-            else {
-
-            let movieList = JSON.parse(localStorage.getItem("movies")) || []; 
-
-            const newMovie = { // Adds new movie to the movie list
-                title,
-                year,
-                genre,
-                rating: selectedRating // Use the selected rating
-            };
-
-            movieList.push(newMovie);
+            // Save the updated list back to localStorage
             localStorage.setItem("movies", JSON.stringify(movieList));
 
             displayMovies();
 
-            // Clears form
+            // Clear the form
             document.getElementById("title").value = "";
             document.getElementById("year").value = "";
             document.getElementById("genre").value = "";
             selectedRating = 0;
             updateStars(selectedRating);
 
-            alert("Movie added successfully!");
-        }
-    }
+            alert("Movie added/updated successfully!");
+}
+
 
         // Display movies on page load
         displayMovies();
