@@ -66,6 +66,7 @@
 
 - The addition of z-index controls the stacking order of elements with the higher values at the front. As you change the z-index values of different elements, the greater value will remain at the front most position.
 
+
 - Challenge: 
     * What changes that you have to do on the code that will position .notice box on the top right corner of the .content box? 
       - To get the .notice box to be at that position, it has to be placed relative to .content box. This can be done using absolute and relative positions:
@@ -78,11 +79,19 @@
     * Try to change the position of .content to relative then to fixed. What do you observed each time?
     * What do you observe on about the effect of z-index on .notice and .content boxes?
 
+
+
 3. Please answer the following reflection questions (15 minutes)
 
     a. Could you summarize the differences between the CSS position values (static, relative, absolute, fixed)? 
+      - Static: default positioning
+      - Relative: position is relative to its default position
+      - Absolute: position is relative to either its nearest positioned ancestor or  
+                  relative to its veiwport if no ancestor is present
+      - Fixed: element stays in place relative to the viewport
 
     b. How does absolute positioning depend on its parent element?
+      - 
 
     c. How do you differentiate sticky from fixed (you can research on sticky)?
 
